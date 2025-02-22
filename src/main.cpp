@@ -45,11 +45,12 @@ bool parseArgs(int argc, char* argv[], std::string executableName, int& ballNumb
         std::cout << "Usage :" << std::endl;
         std::cout << "sudo ./" << executableName << " -b <ballnumber> -r <radius>" << std::endl;
         std::cout << "Where <ballnumber> is positive integer and <radius> is positive floating point number" << std::endl;
+        std::cout << "Assigning 0 or 0.0 is interpreted as random" << std::endl;
     };
     switch(argc){
         case 1:
             printUsage();
-            std::cout << "Defaulting to : -b 5 -r 0.1" << std::endl;
+            std::cout << "Defaulting to -b 5 -r 0.1" << std::endl;
             ballNumber = 5;
             radius = 0.1f;
             return true;
@@ -65,8 +66,8 @@ bool parseArgs(int argc, char* argv[], std::string executableName, int& ballNumb
         default:
             printUsage(); return false;
     };
-    if(ballNumber > 0 && radius > 0.0){ return true; }
-    else{ printUsage(); return false; }
+    if(ballNumber < 0 || radius < 0.0){ printUsage(); return false; }
+    return true;
 }
 
 void updateTask(std::shared_ptr<BallManager> ballManager)
@@ -123,10 +124,10 @@ int main(int argc, char* argv[]) {
 
     const int period = 500; //micros
     std::vector<Ball> ballVector;
-    for(int iter = 0; iter < ballNumber; iter++)
+    for(int iter = 0; iter < (ballNumber > 0 ? ballNumber : (rand() % 10) + 1); iter++)
     {
         RGB colors = {((rand() % 90) + 10) / 100.0f, ((rand() % 90) + 10) / 100.0f, ((rand() % 90) + 10) / 100.0f};
-        ballVector.push_back(Ball(radius, colors));
+        ballVector.push_back(Ball((radius > 0.0 ? radius : ((rand() % 90) + 10) / 1000.0f), colors));
     }
 
     std::shared_ptr<BallManager> ballManager = std::make_shared<BallManager>(ballVector, mode->width, mode->height, period);

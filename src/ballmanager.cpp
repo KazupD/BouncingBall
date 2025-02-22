@@ -110,15 +110,19 @@ void BallManager::updateBalls()
                 float v1n = ballVectorSave[i].vx * nx + ballVectorSave[i].vy * ny;
                 float v2n = ballVectorSave[j].vx * nx + ballVectorSave[j].vy * ny;
 
-                float v1n_after = v2n;
-                float v2n_after = v1n;
-
+                float m1 = ballVector[i].mass;
+                float m2 = ballVector[j].mass;
+                
+                float v1n_after = ((m1 - m2) * v1n + 2 * m2 * v2n) / (m1 + m2);
+                float v2n_after = ((m2 - m1) * v2n + 2 * m1 * v1n) / (m1 + m2);
+                
                 float v1t_x = ballVectorSave[i].vx - v1n * nx;
                 float v1t_y = ballVectorSave[i].vy - v1n * ny;
                 float v2t_x = ballVectorSave[j].vx - v2n * nx;
                 float v2t_y = ballVectorSave[j].vy - v2n * ny;
 
                 float damping = std::max(0.0f, (realDistance/(ballVector[i].radius+ballVector[j].radius)))*dampingBias;
+
                 ballVector[i].vx = (v1t_x + v1n_after * nx)*damping;
                 ballVector[i].vy = (v1t_y + v1n_after * ny)*damping;
 
