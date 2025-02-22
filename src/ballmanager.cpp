@@ -3,12 +3,14 @@
 #include <cmath>
 #include <iostream>
 
-BallManager::BallManager(std::vector<Ball>& balls, int w, int h, int tp)
+BallManager::BallManager(std::vector<Ball>& balls, const int w, const int h, const int tp)
     : ballVector(balls)
 {
     this->WIDTH = w;
     this->HEIGHT = h;
     this->timePeriod = tp;
+    this->relativeHalfWidth = 1.0f;
+    this->relativeHalfHeight = (float)h/(float)w;
 }
 
 bool BallManager::isCollideWithBall(Ball& b1, Ball& b2)
@@ -21,8 +23,8 @@ bool BallManager::isCollideWithBall(Ball& b1, Ball& b2)
 }
 bool BallManager::isCollideWithWall(Ball& b1)
 {
-    if((b1.x+b1.radius) >= 1.0f || (b1.x-b1.radius) <= -1.0f ||
-        (b1.y+b1.radius) >= 1.0f || (b1.y-b1.radius) <= -1.0f){
+    if((b1.x+b1.radius) >= relativeHalfWidth || (b1.x-b1.radius) <= -relativeHalfWidth ||
+        (b1.y+b1.radius) >= relativeHalfHeight || (b1.y-b1.radius) <= -relativeHalfHeight){
         return true;
     }
     return false;
@@ -39,19 +41,19 @@ bool BallManager::aboutToCollide(Ball& b1, Ball& b2) {
 
 void BallManager::hitWall(Ball& b1)
 {
-    if (b1.x - b1.radius < -1.0f || b1.x + b1.radius > 1.0f) {
+    if (b1.x - b1.radius < -relativeHalfWidth || b1.x + b1.radius > relativeHalfWidth) {
         b1.vx *= -energyLoss;
-        b1.x = b1.x - b1.radius < -1.0f ? -1.0f + b1.radius : 1.0f - b1.radius;
+        b1.x = b1.x - b1.radius < -relativeHalfWidth ? -relativeHalfWidth + b1.radius : relativeHalfWidth - b1.radius;
     }
-    if (b1.y - b1.radius < -1.0f || b1.y + b1.radius > 1.0f) {
+    if (b1.y - b1.radius < -relativeHalfHeight || b1.y + b1.radius > relativeHalfHeight) {
         b1.vy *= -energyLoss;
-        b1.y = b1.y - b1.radius < -1.0f ? -1.0f + b1.radius : 1.0f - b1.radius;
+        b1.y = b1.y - b1.radius < -relativeHalfHeight ? -relativeHalfHeight + b1.radius : relativeHalfHeight - b1.radius;
     }
 }
 
 bool BallManager::placeBalls()
 {
-    int maxtrynumber = 10;
+    const int maxTryNumber = 15;
     for(int i = 0; i < this->ballVector.size(); i++)
     {
         bool placed = true;
@@ -75,7 +77,7 @@ bool BallManager::placeBalls()
             }
 
             counter++;
-            if(counter > maxtrynumber){ return false;}
+            if(counter > maxTryNumber){ return false;}
 
         } while(!placed);
 
@@ -146,9 +148,9 @@ void BallManager::updateBalls()
 
 void BallManager::drawBalls()
 {
-    for(int i = 0; i < ballVector.size(); i++)
+    for(Ball& b1 : ballVector)
     {
-        ballVector[i].drawBall();
+        b1.drawBall();
     }
 }
 

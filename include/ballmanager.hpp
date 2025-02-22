@@ -7,6 +7,8 @@
 class BallManager {
     int WIDTH;
     int HEIGHT;
+    float relativeHalfWidth;
+    float relativeHalfHeight;
     const float gravity = -10.0f;
     const float energyLoss = 0.95f;
     const float dampingBias = 0.9f;
@@ -22,7 +24,7 @@ public:
     int timePeriod;
     
     BallManager() = delete;
-    BallManager(std::vector<Ball>& balls, int w, int h, int tp);
+    BallManager(std::vector<Ball>& balls, const int w, const int h, const int tp);
 
     bool placeBalls();
     void updateBalls();
