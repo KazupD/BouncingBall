@@ -53,7 +53,7 @@ void BallManager::hitWall(Ball& b1)
 
 bool BallManager::placeBalls()
 {
-    const int maxTryNumber = 15;
+    const int maxTryNumber = 25;
     for(int i = 0; i < this->ballVector.size(); i++)
     {
         bool placed = true;
@@ -112,7 +112,7 @@ void BallManager::updateBalls()
 
                 float m1 = ballVector[i].mass;
                 float m2 = ballVector[j].mass;
-                
+
                 float v1n_after = ((m1 - m2) * v1n + 2 * m2 * v2n) / (m1 + m2);
                 float v2n_after = ((m2 - m1) * v2n + 2 * m1 * v1n) / (m1 + m2);
                 

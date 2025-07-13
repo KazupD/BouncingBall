@@ -5,10 +5,10 @@
 #include "ball.hpp"
 
 class BallManager {
-    int WIDTH;
-    int HEIGHT;
-    float relativeHalfWidth;
-    float relativeHalfHeight;
+    int WIDTH = 0;
+    int HEIGHT = 0;
+    float relativeHalfWidth = 0.0f;
+    float relativeHalfHeight = 0.0f;
     const float gravity = -10.0f;
     const float energyLoss = 0.95f;
     const float dampingBias = 0.9f;

@@ -9,12 +9,12 @@ struct RGB{
 
 class Ball{
 public:
-    RGB rgb;
-    float x, y;
+    RGB rgb = {0.0, 0.0, 0.0};
+    float x = 0.0, y = 0.0;
     float vx = 0.0f, vy = 0.0f;
     float fx = 0.0f, fy = 0.0f;
-    float radius;
-    float mass;
+    float radius = 0.0;
+    float mass = 0.0;
 
     Ball() = delete;
     Ball(const float r, const RGB rgb);
